@@ -1,0 +1,31 @@
+{% extends 'base.html' %}
+
+{% block page_scripts %}
+    <script>
+        $(document).ready(function(){
+            var webSocket = new WebSocket('ws://' + window.location.host + '/chat/');
+
+            webSocket.onmessage = function(message) {
+                var data = JSON.parse(message.data);
+                $('#msgArea').append('<p><strong>'+ data.sender + '</strong>: ' + data.text + '</p>');
+            };
+
+            $('#btnSubmit').click(function(e) {
+                var msg = JSON.stringify({
+                    text: $('#message').val(),
+                });
+                webSocket.send(msg);
+            })
+        })
+    </script>
+{% endblock %}
+
+{% block content %}
+    <div id="msgArea"></div>
+
+    <div>
+        <textarea name="message" id="message" cols="30" rows="10"></textarea>
+    </div>
+
+    <button id="btnSubmit">Submit</button>
+{% endblock %}
