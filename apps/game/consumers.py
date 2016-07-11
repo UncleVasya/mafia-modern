@@ -33,7 +33,7 @@ def ws_connect(message):
 
     # send message history to new chat member
     room, _ = ChatRoom.objects.get_or_create(name=GLOBAL_CHAT)
-    history = reversed(room.messages.order_by('-timestamp')[:10])
+    history = reversed(room.messages.order_by('-timestamp')[:50])
 
     for msg in history:
         message.reply_channel.send({
