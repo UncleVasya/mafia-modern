@@ -7,12 +7,55 @@
         $(document).ready(function(){
             var webSocket = new WebSocket('ws://' + window.location.host + '/chat/');
 
+            var chat_message = function(data) {
+                var time = new Date(data['timestamp']);
+                time = '[' + time.getHours() + ':' + time.getMinutes() + ']';
+
+                var meta = time + ' ' + data['sender'];
+                if (data['highlight'])
+                    meta += ' >>' + data['highlight'];
+                meta += ': ';
+
+                meta = $('<span />').text(meta);
+
+                var msg = $('<p />');
+                if (data['sender'] === 'System') {
+                    msg.addClass('message-system');
+                } else {
+                    meta.addClass('message-meta');
+                }
+
+                msg.append(meta)
+                   .append(document.createTextNode(data.text));
+
+                var chat = $('#messages');
+                chat.append(msg);
+                chat.scrollTop(chat[0].scrollHeight);
+            };
+
+            var chat_members = function(data) {
+                var mem_list = $('#chat-members');
+                mem_list.empty();
+
+                var members = data['chat_members'];
+                $('#chat-members-num').text(members.length.toString());
+
+                var member;
+                for (var i=0; i < members.length; ++i) {
+                    member = $('<p />').text(members[i]);
+                    mem_list.append(member);
+                }
+            };
+
             webSocket.onmessage = function(message) {
                 var data = JSON.parse(message.data);
-                var chat = $('#messages');
 
-                chat.append('<p><strong>'+ data.sender + '</strong>: ' + data.text + '</p>');
-                chat.scrollTop(chat[0].scrollHeight);
+                // this is chat message
+                if (data['text']) {
+                    chat_message(data);
+                } else if (data['chat_members']) {
+                    chat_members(data);
+                }
             };
 
             $('#msg-form').submit(function(event) {
@@ -23,7 +66,7 @@
 
                 this.reset();
                 event.preventDefault();
-            })
+            });
         })
     </script>
 {% endblock page_scripts %}
@@ -36,15 +79,25 @@
     {# games panel #}
     <div id="games-area" class="container">
         <div class="left-panel">
-            <div class="captioned">
+            <div class="flex-vertical">
                 <p class="caption"> Game lobbies </p>
-                <div class="captioned-data" id="games-list"></div>
+                <div class="flex flex-horizontal">
+                    <div id="game-buttons">
+                         <img src="{% static 'img/computers.png' %}">
+                         <button type="button"> New game </button>
+                         <button type="button"> Join </button>
+                         <button type="button"> Leave </button>
+                    </div>
+                    <div id="games-list" class="flex"></div>
+                </div>
             </div>
         </div>
         <div class="right-panel">
-            <div class="captioned">
-                <p class="caption"> In game: 0 </p>
-                <div id="games-members" class="captioned-data"></div>
+            <div class="flex-vertical">
+                <p class="caption"> In game:
+                    <span id="in-game-num"></span>
+                </p>
+                <div id="games-members" class="flex"></div>
             </div>
         </div>
     </div>
@@ -55,9 +108,11 @@
             <div id="messages"></div>
         </div>
         <div class="right-panel">
-            <div class="captioned">
-                <p class="caption"> In chat: 0 </p>
-                <div id="chat-members" class="captioned-data"></div>
+            <div class="flex-vertical">
+                <p class="caption"> In chat:
+                    <span id="chat-members-num"></span>
+                </p>
+                <div id="chat-members" class="flex"></div>
             </div>
         </div>
     </div>

@@ -1,12 +1,12 @@
 from collections import defaultdict
 import json
 import logging
-from time import sleep
-from apps.game.models import ChatMessage, ChatRoom
+from time import sleep, timezone
+from apps.game.models import ChatRoom
 from django.core.cache import cache
 from channels import Group
 from channels.auth import channel_session_user_from_http, channel_session_user
-
+from django.utils import timezone
 
 GLOBAL_CHAT = 'chat'
 GLOBAL_CHAT_MEMBERS = 'chat_members'
@@ -18,18 +18,33 @@ log = logging.getLogger(__name__)
 def chat_message(room, message):
     log.debug('Chat message. Message: %s', message)
 
-    Group(room).send({
-        'text': json.dumps(message)
-    })
-
     room_obj = ChatRoom.objects.get(name=room)
-    room_obj.messages.create(**message)
+    msg = room_obj.messages.create(**message)
+
+    Group(room).send({
+        'text': json.dumps({
+            'text': msg.text,
+            'sender': msg.sender,
+            'timestamp': msg.timestamp.isoformat()
+        })
+    })
 
 
 # Connected to websocket.connect
 @channel_session_user_from_http
 def ws_connect(message):
     Group(GLOBAL_CHAT).add(message.reply_channel)
+
+    # send updated member list
+    members = cache.get(GLOBAL_CHAT_MEMBERS, defaultdict(int))
+    members[message.user] += 1  # connections number (user can open many tabs)
+    cache.set(GLOBAL_CHAT_MEMBERS, members, None)
+
+    Group(GLOBAL_CHAT).send({
+        'text': json.dumps({
+            'chat_members': [user.username for user in members.keys()]
+        })
+    })
 
     # send message history to new chat member
     room, _ = ChatRoom.objects.get_or_create(name=GLOBAL_CHAT)
@@ -45,17 +60,21 @@ def ws_connect(message):
         })
         sleep(0.01)  # to not overflood websocket
 
-    # send greetings and member list
-    members = cache.get(GLOBAL_CHAT_MEMBERS, defaultdict(int))
-    members[message.user] += 1  # connections number (user can open many tabs)
-    cache.set(GLOBAL_CHAT_MEMBERS, members, None)
-
     # if this is his first client, notify others about connected user
     if members[message.user] == 1:
         chat_message(GLOBAL_CHAT, {
-            'text': ['%s (%d)  ' % (user.username, members[user]) for user in members],
-            'sender': 'Connected: ' + message.user.username,
+            'text': 'User %s connected to the game.' % message.user.username,
+            'sender': 'System',
         })
+
+    # send greetings
+    message.reply_channel.send({
+        'text': json.dumps({
+            'text': 'Welcome to the Mafia!',
+            'sender': 'System',
+            'timestamp': timezone.now().isoformat()
+        })
+    })
 
     log.debug('Chat connect. Client: %s:%s',
               message['client'][0], message['client'][1])
@@ -97,7 +116,14 @@ def ws_disconnect(message):
 
         # notify other members about user disconnect
         chat_message(GLOBAL_CHAT, {
-            'text': ['%s (%d)  ' % (user.username, members[user]) for user in members],
-            'sender': 'Disconnected: ' + message.user.username,
+            'text': 'User %s disconnected from the game.' % message.user.username,
+            'sender': 'System',
+        })
+
+        # send updated members list
+        Group(GLOBAL_CHAT).send({
+            'text': json.dumps({
+                'chat_members': [user.username for user in members.keys()]
+            })
         })
     cache.set(GLOBAL_CHAT_MEMBERS, members, None)

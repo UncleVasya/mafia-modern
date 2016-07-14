@@ -13,14 +13,14 @@ html, body {
     margin-bottom: 2px;
 }
 
-#game-buttons {
-    display: inline-block;
-}
-#game-buttons button {
+#game-buttons * {
     display: block;
+    width: 100px;
+    /*max-height: 25px;*/
+    margin: 0 7px 10px 7px;
 }
 
-#games-area div {
+#games-area > div {
     height: 100%;
 }
 
@@ -34,7 +34,7 @@ html, body {
 }
 
 #chat-area {
-    height: calc(100% - (175px + 21px));
+    height: calc(100% - (175px + 25px));
 }
 
 #chat-area div {
@@ -45,10 +45,30 @@ html, body {
     background: #ECE9DC;
     overflow-y: scroll;
     padding-left: 10px;
+    word-wrap: break-word;
 }
 
-#messages * {
-    word-wrap: break-word;
+#messages p {
+    font: 18px bold Arial, sans-serif;
+    margin: 0;
+}
+
+.message-meta {
+    color: blue;
+}
+
+.message-system {
+    color: green;
+}
+
+#chat-members {
+    padding: 5px;
+}
+
+#chat-members p {
+    color: blue;
+    font: 18px bold Arial, sans-serif;
+    margin: 0;
 }
 
 #msg-area div {
@@ -83,11 +103,6 @@ html, body {
     width: 245px;
 }
 
-.captioned {
-    display: flex;
-    flex-flow: column;
-}
-
 .caption {
     color: yellow;
     font: 22px italic Verdana, sans-serif;
@@ -96,5 +111,21 @@ html, body {
 }
 
 .captioned-data {
+    display: flex;
     flex: 1;
+}
+
+.flex {
+    flex: 1;
+}
+
+.flex-vertical {
+    display: flex;
+    height: 100%;
+    flex-flow: column;
+}
+
+.flex-horizontal {
+    display: flex;
+    flex-flow: row;
 }
