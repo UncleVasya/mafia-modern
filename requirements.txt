@@ -3,3 +3,4 @@ channels==0.15.1
 
 dj-database-url==0.4.1
 whitenoise==3.2
+psycopg2==2.6.1
