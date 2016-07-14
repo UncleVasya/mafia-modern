@@ -5,7 +5,8 @@
 {% block page_scripts %}
     <script>
         $(document).ready(function(){
-            var webSocket = new WebSocket('ws://' + window.location.host + '/chat/');
+            var ws_scheme = window.location.protocol == "https:" ? "wss" : "ws";
+            var webSocket = new WebSocket(ws_scheme + window.location.host + '/chat/');
 
             var chat_message = function(data) {
                 var time = new Date(data['timestamp']);
