@@ -11,7 +11,22 @@ class ChatRoom(models.Model):
 
 class ChatMessage(models.Model):
     room = models.ForeignKey(ChatRoom, related_name='messages')
-    sender = models.TextField()
+    sender = models.TextField()  # TODO: replace with User?
     text = models.TextField()
     highlight = models.TextField()  # recipient's nick
     timestamp = models.DateTimeField(default=timezone.now, db_index=True)
+
+
+class Game(models.Model):
+    name = models.TextField()
+    players_num = models.PositiveSmallIntegerField()
+    level = models.PositiveSmallIntegerField(default=1)
+    type = models.TextField(default='Normal')  # Normal, Personal, etc
+    players = models.ManyToManyField(User)
+    chat = models.OneToOneField(ChatRoom, null=True)
+    winner = models.TextField()  # TODO: create Role model?
+
+    status = models.TextField(default='Created')
+    created_by = models.TextField()  # TODO: replace with User?
+    timestamp = models.DateTimeField(default=timezone.now, db_index=True)
+

@@ -6,7 +6,7 @@
     <script>
         $(document).ready(function(){
             var ws_scheme = window.location.protocol == "https:" ? "wss" : "ws";
-            var webSocket = new WebSocket(ws_scheme + '://' + window.location.host + '/chat/');
+            var webSocket = new WebSocket(ws_scheme + '://' + window.location.host);
 
             var chat_message = function(data) {
                 var time = new Date(data['timestamp']);
@@ -48,6 +48,25 @@
                 }
             };
 
+            var game_list = function(data) {
+                var games_list = $('#games-list > table > tbody');
+                games_list.empty();
+
+                var games = data['game_list'];
+                var game, game_row;
+                for (var i=0; i < games.length; ++i) {
+                    game = games[i];
+                    game_row = $('<tr />').append(
+                        $('<td />').text(game['name']),
+                        $('<td />').text(game['players_num']),
+                        $('<td />').text(game['level']),
+                        $('<td />').text(game['players_num'] - game['players'].length),
+                        $('<td />').text(game['players'])
+                    );
+                    games_list.append(game_row);
+                }
+            };
+
             webSocket.onmessage = function(message) {
                 var data = JSON.parse(message.data);
 
@@ -56,11 +75,14 @@
                     chat_message(data);
                 } else if (data['chat_members']) {
                     chat_members(data);
+                } else if (data['game_list']) {
+                    game_list(data);
                 }
             };
 
             $('#msg-form').submit(function(event) {
                 var msg = JSON.stringify({
+                    command: 'chat_msg',
                     text: $('#msg').val()
                 });
                 webSocket.send(msg);
@@ -68,6 +90,13 @@
                 this.reset();
                 event.preventDefault();
             });
+
+            $('#game-create').click(function() {
+                var msg = JSON.stringify({
+                    command: 'game_create'
+                });
+                webSocket.send(msg);
+            })
         })
     </script>
 {% endblock page_scripts %}
@@ -85,11 +114,24 @@
                 <div class="flex flex-horizontal">
                     <div id="game-buttons">
                          <img src="{% static 'img/computers.png' %}">
-                         <button type="button"> New game </button>
-                         <button type="button"> Join </button>
-                         <button type="button"> Leave </button>
+                         <button id="game-create" type="button"> New game </button>
+                         <button id="game-join" type="button"> Join </button>
+                         <button id="game-leave" type="button"> Leave </button>
                     </div>
-                    <div id="games-list" class="flex"></div>
+                    <div id="games-list" class="flex">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <td> Game </td>
+                                    <td> Players </td>
+                                    <td> Level </td>
+                                    <td> Slots </td>
+                                    <td> Joined </td>
+                                </tr>
+                            </thead>
+                            <tbody></tbody>
+                        </table>
+                    </div>
                 </div>
             </div>
         </div>

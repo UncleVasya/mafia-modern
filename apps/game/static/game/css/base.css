@@ -16,12 +16,16 @@ html, body {
 #game-buttons * {
     display: block;
     width: 100px;
-    /*max-height: 25px;*/
     margin: 0 7px 10px 7px;
 }
 
 #games-area > div {
     height: 100%;
+}
+
+#games-list {
+    color: #1F2161;
+    font: bold 16px Arial, sans-serif;
 }
 
 #games-list, #games-members, #chat-members {
@@ -49,7 +53,7 @@ html, body {
 }
 
 #messages p {
-    font: 18px bold Arial, sans-serif;
+    font: 18px Arial, sans-serif;
     margin: 0;
 }
 
@@ -67,7 +71,7 @@ html, body {
 
 #chat-members p {
     color: blue;
-    font: 18px bold Arial, sans-serif;
+    font: 18px Arial, sans-serif;
     margin: 0;
 }
 
@@ -128,4 +132,5 @@ html, body {
 .flex-horizontal {
     display: flex;
     flex-flow: row;
+    min-height: 0;
 }
