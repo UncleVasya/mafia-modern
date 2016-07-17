@@ -1,7 +1,7 @@
 from collections import defaultdict
 import json
 import logging
-from time import sleep, timezone
+from time import sleep
 import datetime
 from apps.game.models import ChatRoom, Game
 from django.core.cache import cache
@@ -17,6 +17,10 @@ GLOBAL_CHAT_MEMBERS = 'chat_members'  # cache key
 
 # channel name and cache key
 GAME = 'game_'  # used by adding ID: 'game_ID'
+
+# dict representing in what game user is currently in, if any:
+# {'Vasya': 32, 'Petya': None}
+GAME_BY_USER = 'game_by_user'  # cache_key
 
 
 log = logging.getLogger(__name__)
@@ -135,6 +139,7 @@ def ws_message(message):
 
     try:
         data = json.loads(message['text'])
+        log.debug("Got ws message: %s", data)
     except ValueError:
         log.debug("ws message isn't json text: %s", message['text'])
         return
@@ -165,10 +170,44 @@ def ws_message(message):
         state['players'].append(message.user.username)
         cache.set(GAME + str(game.id), state)
 
+        message.channel_session['game'] = game.id
+
         send_game_list(GLOBAL_CHAT)
 
     elif command == 'game_join':
-        pass
+        # check that user is not currently in game
+        game_by_user = cache.get(GAME_BY_USER, defaultdict(int))
+        current_game = game_by_user.get(message.user.username, None)
+        if current_game:
+            # TODO: add name info to game cache so I don't need to query DB here
+            game = Game.objects.get(id=current_game)
+            message.reply_channel.send({
+                'text': json.dumps({
+                    'text': 'You are already in %s.' % game.name,
+                    'sender': 'System',
+                    'timestamp': timezone.now().isoformat()
+                })
+            })
+            return
+
+        state = cache.get(GAME + str(data['id']), new_state())
+        state['players'].append(message.user.username)
+        cache.set(GAME + str(data['id']), state)
+
+        game_by_user[message.user.username] = data['id']
+        cache.set(GAME_BY_USER, game_by_user)
+
+        send_game_list(GLOBAL_CHAT)
+
+        game = Game.objects.get(id=data['id'])
+        message.reply_channel.send({
+            'text': json.dumps({
+                'text': 'You joined %s.' % game.name,
+                'sender': 'System',
+                'timestamp': timezone.now().isoformat()
+            })
+        })
+
     elif command == 'game_leave':
         pass
 

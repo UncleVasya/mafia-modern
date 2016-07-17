@@ -49,21 +49,22 @@
             };
 
             var game_list = function(data) {
-                var games_list = $('#games-list > table > tbody');
-                games_list.empty();
+                var games_table = $('#games-table').find('tbody');
+                games_table.empty();
 
                 var games = data['game_list'];
                 var game, game_row;
                 for (var i=0; i < games.length; ++i) {
                     game = games[i];
-                    game_row = $('<tr />').append(
+                    game_row = $('<tr />').addClass('game-row').append(
+                        $('<td />').text(game['id']).hide(),
                         $('<td />').text(game['name']),
                         $('<td />').text(game['players_num']),
                         $('<td />').text(game['level']),
                         $('<td />').text(game['players_num'] - game['players'].length),
                         $('<td />').text(game['players'])
                     );
-                    games_list.append(game_row);
+                    games_table.append(game_row);
                 }
             };
 
@@ -96,7 +97,28 @@
                     command: 'game_create'
                 });
                 webSocket.send(msg);
-            })
+            });
+
+            $('#game-join').click(function() {
+                var games_table = $('#games-table');
+                var game_id = games_table.find('.selected :first-child').text();
+                game_id = parseInt(game_id);
+
+                var msg = JSON.stringify({
+                    command: 'game_join',
+                    id: game_id
+                });
+                webSocket.send(msg);
+            });
+
+            $('#games-table').on('click', '.game-row', function() {
+                if ($(this).hasClass('selected')) {
+                    $(this).removeClass('selected');
+                } else {
+                    $(this).siblings().removeClass('selected');
+                    $(this).addClass('selected');
+                }
+            });
         })
     </script>
 {% endblock page_scripts %}
@@ -119,7 +141,7 @@
                          <button id="game-leave" type="button"> Leave </button>
                     </div>
                     <div id="games-list" class="flex">
-                        <table>
+                        <table id="games-table">
                             <thead>
                                 <tr>
                                     <td> Game </td>
