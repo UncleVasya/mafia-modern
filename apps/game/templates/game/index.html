@@ -111,6 +111,13 @@
                 webSocket.send(msg);
             });
 
+            $('#game-leave').click(function() {
+                var msg = JSON.stringify({
+                    command: 'game_leave'
+                });
+                webSocket.send(msg);
+            });
+
             $('#games-table').on('click', '.game-row', function() {
                 if ($(this).hasClass('selected')) {
                     $(this).removeClass('selected');
