@@ -53,6 +53,10 @@ html, body {
     border-right: 2px solid #C2C9CF;
 }
 
+.game-row span {
+    padding-right: 10px;
+}
+
 #games-list, #games-members, #chat-members {
     background: #C2C9CF;
     overflow-y: scroll;

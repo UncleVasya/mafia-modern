@@ -4,6 +4,8 @@
 
 {% block page_scripts %}
     <script>
+        var mafia = {};  // global namespace for persistent data
+
         $(document).ready(function(){
             var ws_scheme = window.location.protocol == "https:" ? "wss" : "ws";
             var webSocket = new WebSocket(ws_scheme + '://' + window.location.host);
@@ -53,31 +55,56 @@
                 games_table.empty();
 
                 var games = data['game_list'];
-                var game, game_row;
+                var game, game_row, players, player;
                 for (var i=0; i < games.length; ++i) {
                     game = games[i];
+
                     game_row = $('<tr />').addClass('game-row').append(
                         $('<td />').text(game['id']).hide(),
                         $('<td />').text(game['name']),
                         $('<td />').text(game['players_num']),
                         $('<td />').text(game['level']),
-                        $('<td />').text(game['players_num'] - game['players'].length),
-                        $('<td />').text(game['players'])
+                        $('<td />').text(game['players_num'] - game['players'].length)
                     );
+
+                    players = $('<td />');
+                    for (var p=0; p < game['players'].length; ++p) {
+                        player = game['players'][p];
+                        player = $('<span>').text(player)
+                        players.append(player);
+                    }
+                    game_row.append(players);
+
                     games_table.append(game_row);
+                }
+            };
+
+            // enables or disables game buttons according to user status
+            var user_status = function(data) {
+                mafia.user_status = data;
+
+                $('.game-button').attr('disabled', 'disabled');
+                if (data['game']) {
+                    $('#game-leave').removeAttr('disabled');
+                } else {
+                    $('#game-create').removeAttr('disabled');
+                    if (('#games-table').find('.selected')) {
+                        $('#game-join').removeAttr('disabled');
+                    }
                 }
             };
 
             webSocket.onmessage = function(message) {
                 var data = JSON.parse(message.data);
 
-                // this is chat message
                 if (data['text']) {
                     chat_message(data);
                 } else if (data['chat_members']) {
                     chat_members(data);
                 } else if (data['game_list']) {
                     game_list(data);
+                } else if (data['user']) {
+                    user_status(data)
                 }
             };
 
@@ -119,11 +146,10 @@
             });
 
             $('#games-table').on('click', '.game-row', function() {
-                if ($(this).hasClass('selected')) {
-                    $(this).removeClass('selected');
-                } else {
-                    $(this).siblings().removeClass('selected');
-                    $(this).addClass('selected');
+                $(this).siblings().removeClass('selected');
+                $(this).addClass('selected');
+                if (!mafia.user_status['game']) {
+                    $('#game-join').removeAttr('disabled');
                 }
             });
         })
@@ -143,9 +169,9 @@
                 <div class="flex flex-horizontal">
                     <div id="game-buttons">
                          <img src="{% static 'img/computers.png' %}">
-                         <button id="game-create" type="button"> New game </button>
-                         <button id="game-join" type="button"> Join </button>
-                         <button id="game-leave" type="button"> Leave </button>
+                         <button id="game-create" class="game-button" type="button"> New game </button>
+                         <button id="game-join" class="game-button" type="button"> Join </button>
+                         <button id="game-leave" class="game-button" type="button"> Leave </button>
                     </div>
                     <div id="games-list" class="flex">
                         <table id="games-table">

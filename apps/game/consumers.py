@@ -33,8 +33,20 @@ def new_state():
     }
 
 
+# sends client his username and status
+def send_user_status(message):
+    username = message.user.username
+    game_by_user = cache.get(GAME_BY_USER, defaultdict(int))
+
+    message.reply_channel.send({
+        'text': json.dumps({
+            'user': username,
+            'game': game_by_user[username]
+        })
+    })
+
+
 # sends game list to the group or reply_channel
-#
 def send_game_list(channel):
     games = Game.objects.filter(status__in=['Created', 'Started'])
     game_list = []
@@ -79,7 +91,7 @@ def chat_message(room, message):
 def ws_connect(message):
     Group(GLOBAL_CHAT).add(message.reply_channel)
 
-    # send game list
+    send_user_status(message)
     send_game_list(message.reply_channel)
 
     # send updated member list
@@ -152,6 +164,7 @@ def game_add_user(game_id, message):
     # send updated game list to users
     send_game_list(GLOBAL_CHAT)
 
+    send_user_status(message)
     message.reply_channel.send({
         'text': json.dumps({
             'text': 'You joined %s.' % game.name,
@@ -178,6 +191,7 @@ def user_leave_game(message):
     state['players'].remove(message.user.username)
     cache.set(game_cache_key, state)
 
+    send_user_status(message)
     game = Game.objects.get(id=game_id)
     message.reply_channel.send({
         'text': json.dumps({
