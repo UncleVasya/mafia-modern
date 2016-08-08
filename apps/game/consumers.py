@@ -304,4 +304,6 @@ def ws_disconnect(message):
                 'chat_members': members.keys()
             })
         })
+
+        user_leave_game(message)
     cache.set(GLOBAL_CHAT_MEMBERS, members)
