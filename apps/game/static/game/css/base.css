@@ -28,6 +28,31 @@ html, body {
     font: bold 16px Arial, sans-serif;
 }
 
+#games-table {
+    width: 100%;
+}
+
+#games-table td {
+    padding-left: 5px;
+}
+
+#games-table td:first-child {
+    width: 110px;
+}
+
+#games-table td:nth-child(n+2):nth-child(-n+4){
+    width: 80px;
+}
+
+#games-table thead tr {
+    background-color: #81BDF3;
+}
+
+#games-table thead td {
+    background-color: #81BDF3;
+    border-right: 2px solid #C2C9CF;
+}
+
 #games-list, #games-members, #chat-members {
     background: #C2C9CF;
     overflow-y: scroll;
