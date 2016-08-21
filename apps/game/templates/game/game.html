@@ -1,0 +1,39 @@
+{% extends 'base.html' %}
+
+{% load static %}
+
+{% block page_scripts %}
+    <script src="{% static 'game/js/game.js' %}"></script>
+{% endblock page_scripts %}
+
+{% block page_styles %}
+    <link href="{% static 'game/css/base.css' %}" media="screen, projection" rel="stylesheet">
+    <link href="{% static 'game/css/game.css' %}" media="screen, projection" rel="stylesheet">
+{% endblock page_styles%}
+
+{% block content %}
+    {# chat panel #}
+    <div id="chat-area" class="container">
+        <div class="left-panel">
+            <div id="messages"></div>
+        </div>
+        <div class="right-panel">
+            <div class="flex-vertical">
+                <div id="chat-members" class="flex"></div>
+            </div>
+        </div>
+    </div>
+
+    {# send message panel #}
+    <div id="msg-area" class="container">
+        <form id="msg-form">
+            <div class="left-panel">
+                <input type="text" id="msg" maxlength="300">
+            </div>
+            <div class="right-panel">
+                <input type="submit" value="Submit">
+                <input type="reset" value="Clear">
+            </div>
+        </form>
+    </div>
+{% endblock content %}

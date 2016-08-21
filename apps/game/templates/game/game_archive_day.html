@@ -1,0 +1,17 @@
+<h1>{{ day }}</h1>
+
+<ul>
+    {% for game in object_list %}
+        <li>{{ game.timestamp|date:"F j, Y" }}: {{ game.name }}</li>
+    {% endfor %}
+</ul>
+
+<p>
+    {% if previous_day %}
+        Previous Day: {{ previous_day }}
+    {% endif %}
+    {% if previous_day and next_day %}--{% endif %}
+    {% if next_day %}
+        Next Day: {{ next_day }}
+    {% endif %}
+</p>

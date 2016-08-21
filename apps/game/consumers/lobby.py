@@ -1,4 +1,5 @@
 from collections import defaultdict
+import collections
 import json
 import logging
 from time import sleep
@@ -29,7 +30,7 @@ log = logging.getLogger(__name__)
 
 def new_state():
     return {
-        'players': [],
+        'players': collections.OrderedDict(),
     }
 
 
@@ -153,7 +154,7 @@ def game_add_user(game_id, message):
     # update game state
     game_cache_key = GAME + str(game_id)
     state = cache.get(game_cache_key, new_state())
-    state['players'].append(message.user.username)
+    state['players'][message.user.username] = {'clients': 0}  # TODO: init this on game start
     cache.set(game_cache_key, state)
 
     # update user game presence
@@ -188,7 +189,7 @@ def user_leave_game(message):
     # update game state
     game_cache_key = GAME + str(game_id)
     state = cache.get(game_cache_key)
-    state['players'].remove(message.user.username)
+    del state['players'][message.user.username]
     cache.set(game_cache_key, state)
 
     send_user_status(message)

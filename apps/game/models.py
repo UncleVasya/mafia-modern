@@ -26,7 +26,7 @@ class Game(models.Model):
     chat = models.OneToOneField(ChatRoom, null=True)
     winner = models.TextField()  # TODO: create Role model?
 
-    status = models.TextField(default='Created')
+    status = models.TextField(default='Created')  # Started, Finished, Canceled, etc
     created_by = models.TextField()  # TODO: replace with User?
     timestamp = models.DateTimeField(default=timezone.now, db_index=True)
 

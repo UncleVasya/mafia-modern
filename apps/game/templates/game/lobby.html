@@ -1,0 +1,80 @@
+{% extends 'base.html' %}
+
+{% load static %}
+
+{% block page_scripts %}
+    <script src="{% static 'game/js/lobby.js' %}"></script>
+{% endblock page_scripts %}
+
+{% block page_styles %}
+    <link href="{% static 'game/css/base.css' %}" media="screen, projection" rel="stylesheet">
+{% endblock page_styles%}
+
+{% block content %}
+    {# games panel #}
+    <div id="games-area" class="container">
+        <div class="left-panel">
+            <div class="flex-vertical">
+                <p class="caption"> Game lobbies </p>
+                <div class="flex flex-horizontal">
+                    <div id="game-buttons">
+                         <img src="{% static 'img/computers.png' %}">
+                         <button id="game-create" class="game-button" type="button"> New game </button>
+                         <button id="game-join" class="game-button" type="button"> Join </button>
+                         <button id="game-leave" class="game-button" type="button"> Leave </button>
+                    </div>
+                    <div id="games-list" class="flex">
+                        <table id="games-table">
+                            <thead>
+                                <tr>
+                                    <td> Game </td>
+                                    <td> Players </td>
+                                    <td> Level </td>
+                                    <td> Slots </td>
+                                    <td> Joined </td>
+                                </tr>
+                            </thead>
+                            <tbody></tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="right-panel">
+            <div class="flex-vertical">
+                <p class="caption"> In game:
+                    <span id="in-game-num"></span>
+                </p>
+                <div id="games-members" class="flex"></div>
+            </div>
+        </div>
+    </div>
+
+    {# chat panel #}
+    <div id="chat-area" class="container">
+        <div class="left-panel">
+            <div id="messages"></div>
+        </div>
+        <div class="right-panel">
+            <div class="flex-vertical">
+                <p class="caption"> In chat:
+                    <span id="chat-members-num"></span>
+                </p>
+                <div id="chat-members" class="flex"></div>
+            </div>
+        </div>
+    </div>
+
+    {# send message panel #}
+    <div id="msg-area" class="container">
+        <form id="msg-form">
+            <div class="left-panel">
+                <input type="text" id="msg" maxlength="300">
+            </div>
+            <div class="right-panel">
+                <input type="submit" value="Submit">
+                <input type="reset" value="Clear">
+            </div>
+        </form>
+    </div>
+{% endblock content %}

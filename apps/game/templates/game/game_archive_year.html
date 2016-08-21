@@ -1,0 +1,11 @@
+<ul>
+    {% for date in date_list %}
+        <li>{{ date|date }}</li>
+    {% endfor %}
+</ul>
+
+<ul>
+    {% for game in object_list %}
+        <li>{{ game.timestamp|date:"F j, Y" }}: {{ game.name }}</li>
+    {% endfor %}
+</ul>
