@@ -1,3 +1,112 @@
-#chat-area {
-    height: calc(100% - 27px);
+html, body {
+    font: 18px Arial, sans-serif;
 }
+
+.container {
+    height: 100%;
+}
+
+.left-panel, .right-panel {
+    height: 100%;
+}
+
+.left-panel {
+    width: calc(100% - 422px - 7px);
+    margin-left: 7px;
+}
+
+.right-panel {
+    width: 420px;
+}
+
+.role-picture {
+    height: 70px;
+}
+
+#sky-picture {
+    height: 70px;
+}
+
+#sky-picture > img {
+    height: 100%;
+    width: 100%;
+}
+
+#messages {
+    background: #C0C0C0;
+    border: none;
+    margin-top: 7px;
+    height: calc(100% - 70px - 7px - 27px );  /* 100% - sky panel - padding - msg panel */
+}
+
+#vote-caption {
+    display: flex;
+    height: 70px;
+    align-items: center;
+    justify-content: center;
+}
+
+#vote-caption > span {
+    margin-top: 6px;
+    padding: 2px 35px;
+    font-size: 20px;
+    font-weight: bold;
+    color: #800000;
+    background-color: #DBD9D1;
+}
+
+.player-row {
+    height: 46px;
+    border: #495677 solid 1px;
+    margin: 3px;
+}
+
+.player-row > div {
+    display: inline-block;
+    height: 28px;
+    margin-left: 2px;
+    margin-bottom: 3px;
+    vertical-align: bottom;
+    font-weight: bold;
+    background: #DCD9D2;
+}
+
+.vote {
+    color: #DA251D;
+}
+
+.player-row > div > span {
+    display: flex;
+    height: 100%;
+    align-items: center;
+    justify-content: center;
+}
+
+.player-row > .vote-box {
+    background: inherit;
+    width: 28px
+}
+
+.player-row > .role-picture {
+    height: 45px;
+    margin: 0 4px;
+}
+
+.player-row > .username {
+    width: 134px;
+    color: #0900BD;
+}
+
+.player-row > .votes-num {
+    width: 28px;
+}
+
+.player-row > .vote-name {
+    width: 115px;
+    font-weight: normal;
+}
+
+.player-row > .vote-confirm {
+    width: 42px;
+}
+

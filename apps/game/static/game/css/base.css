@@ -143,11 +143,6 @@ html, body {
     margin: 0;
 }
 
-.captioned-data {
-    display: flex;
-    flex: 1;
-}
-
 .flex {
     flex: 1;
 }

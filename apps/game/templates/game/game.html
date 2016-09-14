@@ -13,27 +13,119 @@
 
 {% block content %}
     {# chat panel #}
-    <div id="chat-area" class="container">
+{#    <div id="chat-area" class="container">#}
+{#        <div class="left-panel">#}
+{#            <div id="messages"></div>#}
+{#        </div>#}
+{#        <div class="right-panel">#}
+{#            <div class="flex-vertical">#}
+{#                <div id="players" class="flex"></div>#}
+{#            </div>#}
+{#        </div>#}
+{#    </div>#}
+{##}
+    {# send message panel #}
+{#    <div id="msg-area" class="container">#}
+{#        <form id="msg-form">#}
+{#            <div class="left-panel">#}
+{#                <input type="text" id="msg" maxlength="300">#}
+{#            </div>#}
+{#            <div class="right-panel">#}
+{#                <input type="submit" value="Submit">#}
+{#                <input type="reset" value="Clear">#}
+{#            </div>#}
+{#        </form>#}
+{#    </div>#}
+
+    <div class="container">
         <div class="left-panel">
+            {# user role, timer and sky picture #}
+            <div class="flex-horizontal">
+                <div class="role-picture">
+                    <img src="{% static 'img/role_police_male.png' %}">
+                </div>
+                <div id="sky-picture" class="flex">
+                    <img src="{% static 'img/sky_day.png' %}">
+                </div>
+            </div>
+
+            {# chat area and message form #}
             <div id="messages"></div>
+            <div id="msg-area">
+                <form id="msg-form">
+                    <input type="text" id="msg" maxlength="300">
+                    <input type="submit" value="Submit">
+                    <input type="reset" value="Clear">
+                </form>
+            </div>
         </div>
+
+        {#  players list #}
         <div class="right-panel">
             <div class="flex-vertical">
-                <div id="chat-members" class="flex"></div>
+                <div id="vote-caption">
+                    <span> Who goes to jail? </span>
+                </div>
+
+                <div id="players">
+                    <div class="player-row">
+                        <div class="vote-box"></div>
+                        <div class="role-picture">
+                            <img src="{% static 'img/role_citizen_male.png' %}">
+                        </div>
+                        <div class="username">
+                            <span> Vasya </span>
+                        </div>
+                        <div class="votes-num vote">
+                            <span> 1 </span>
+                        </div>
+                        <div class="vote-name vote">
+                            <span> - </span>
+                        </div>
+                        <div class="vote-confirm vote">
+                            <span> - </span>
+                        </div>
+                    </div>
+
+                    <div class="player-row">
+                        <div class="vote-box"></div>
+                        <div class="role-picture">
+                            <img src="{% static 'img/role_unknown_female.png' %}">
+                        </div>
+                        <div class="username">
+                            <span> Petya </span>
+                        </div>
+                        <div class="votes-num vote">
+                            <span> 0 </span>
+                        </div>
+                        <div class="vote-name vote">
+                            <span> Vasya </span>
+                        </div>
+                        <div class="vote-confirm vote">
+                            <span> Yes </span>
+                        </div>
+                    </div>
+
+                    <div class="player-row">
+                        <div class="vote-box"></div>
+                        <div class="role-picture">
+                            <img src="{% static 'img/role_nobody.png' %}">
+                        </div>
+                        <div class="username">
+                            <span> --nobody-- </span>
+                        </div>
+                        <div class="votes-num vote">
+                            <span> 1 </span>
+                        </div>
+                        <div class="vote-name vote">
+                            <span> - </span>
+                        </div>
+                        <div class="vote-confirm vote">
+                            <span> - </span>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
-    </div>
-
-    {# send message panel #}
-    <div id="msg-area" class="container">
-        <form id="msg-form">
-            <div class="left-panel">
-                <input type="text" id="msg" maxlength="300">
-            </div>
-            <div class="right-panel">
-                <input type="submit" value="Submit">
-                <input type="reset" value="Clear">
-            </div>
-        </form>
     </div>
 {% endblock content %}
