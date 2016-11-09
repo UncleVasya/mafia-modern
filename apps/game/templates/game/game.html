@@ -52,7 +52,7 @@
             {# chat area and message form #}
             <div id="messages"></div>
             <div id="msg-area">
-                <form id="msg-form">
+                <form id="msg-form" class="flex-horizontal">
                     <input type="text" id="msg" maxlength="300">
                     <input type="submit" value="Submit">
                     <input type="reset" value="Clear">
@@ -124,6 +124,11 @@
                             <span> - </span>
                         </div>
                     </div>
+                </div>
+
+                {# town picture #}
+                <div id="town-picture" class="flex">
+                    <img src="{% static 'img/town_day.png' %}"
                 </div>
             </div>
         </div>

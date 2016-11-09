@@ -1,5 +1,6 @@
 html, body {
     font: 18px Arial, sans-serif;
+    height: 99%;
 }
 
 .container {
@@ -17,6 +18,7 @@ html, body {
 
 .right-panel {
     width: 420px;
+    padding-left: 3px;
 }
 
 .role-picture {
@@ -36,7 +38,7 @@ html, body {
     background: #C0C0C0;
     border: none;
     margin-top: 7px;
-    height: calc(100% - 70px - 7px - 27px );  /* 100% - sky panel - padding - msg panel */
+    height: calc(100% - 70px - 14px - 40px );  /* 100% - sky panel - padding - msg panel */
 }
 
 #vote-caption {
@@ -110,3 +112,20 @@ html, body {
     width: 42px;
 }
 
+#town-picture {
+    display: flex;
+    background-color: #0193DE;
+    align-items: flex-end;
+}
+
+#town-picture > img {
+    width: 100%;
+}
+
+#players {
+    margin-bottom: 5px;
+}
+
+#msg-area {
+    margin: 7px 0;
+}
