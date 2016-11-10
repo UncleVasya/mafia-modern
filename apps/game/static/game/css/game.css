@@ -66,10 +66,14 @@ html, body {
 .player-row > div {
     display: inline-block;
     height: 28px;
+    min-width: 28px;
     margin-left: 2px;
     margin-bottom: 3px;
     vertical-align: bottom;
     font-weight: bold;
+}
+
+.player-row > div:not(:first-of-type) {
     background: #DCD9D2;
 }
 
@@ -82,11 +86,6 @@ html, body {
     height: 100%;
     align-items: center;
     justify-content: center;
-}
-
-.player-row > .vote-box {
-    background: inherit;
-    width: 28px
 }
 
 .player-row > .role-picture {
@@ -129,3 +128,44 @@ html, body {
 #msg-area {
     margin: 7px 0;
 }
+
+/* .checkbox */
+.checkbox {
+  width: 28px;
+  height: 28px;
+  position: relative;
+  background: #3498db; !important;
+  box-shadow: inset 0px 1px 1px white, 0px 1px 3px rgba(0, 0, 0, 0.5);
+}
+.checkbox label {
+  width: 20px;
+  height: 20px;
+  cursor: pointer;
+  position: absolute;
+  left: 4px;
+  top: 4px;
+  background: white;
+  box-shadow: inset 0px 1px 1px rgba(0, 0, 0, 0.5), 0px 1px 0px white;
+}
+.checkbox label:after {
+  content: '';
+  width: 9px;
+  height: 5px;
+  position: absolute;
+  top: 4px;
+  left: 4px;
+  border: 3px solid red;
+  border-top: none;
+  border-right: none;
+  background: transparent;
+  opacity: 0;
+  -webkit-transform: rotate(-45deg);
+          transform: rotate(-45deg);
+}
+.checkbox input[type=checkbox] {
+  visibility: hidden;
+}
+.checkbox input[type=checkbox]:checked + label:after {
+  opacity: 1;
+}
+/* end .checkbox */

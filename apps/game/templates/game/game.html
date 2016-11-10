@@ -69,7 +69,12 @@
 
                 <div id="players">
                     <div class="player-row">
-                        <div class="vote-box"></div>
+                        <div class="vote-box">
+                            <div class="checkbox">
+                                <input type="checkbox" id="vote-Vasya" autocomplete="off"/>
+                                <label for="vote-Vasya"></label>
+                            </div>
+                        </div>
                         <div class="role-picture">
                             <img src="{% static 'img/role_citizen_male.png' %}">
                         </div>
@@ -107,7 +112,12 @@
                     </div>
 
                     <div class="player-row">
-                        <div class="vote-box"></div>
+                        <div class="vote-box">
+                            <div class="checkbox">
+                                <input type="checkbox" id="vote-Nobody" autocomplete="off"/>
+                                <label for="vote-Nobody"></label>
+                            </div>
+                        </div>
                         <div class="role-picture">
                             <img src="{% static 'img/role_nobody.png' %}">
                         </div>
